@@ -1,0 +1,47 @@
+plugins {
+    id 'java'
+    id 'org.springframework.boot' version '4.0.1'
+    id 'io.spring.dependency-management' version '1.1.7'
+}
+
+group = 'com.bits.loanproposal'
+version = '0.0.1-SNAPSHOT'
+description = 'Loan Proposal query-side read projection service using bits-ddd 1.2.1'
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(25)
+    }
+}
+
+dependencyManagement {
+    imports {
+        mavenBom 'com.bits.ddd:bits-ddd-bom:1.2.1'
+    }
+}
+
+dependencies {
+    implementation 'com.bits.ddd:query-core'
+    implementation 'com.bits.ddd:shared'
+    implementation 'com.bits.ddd:application'
+    implementation 'com.bits.ddd:infra'
+    implementation 'com.bits.ddd:annotation'
+    annotationProcessor 'com.bits.ddd:annotation-processor'
+    annotationProcessor 'com.bits.ddd:annotation'
+
+    implementation 'org.springframework.boot:spring-boot-starter-validation'
+
+    // Swagger / OpenAPI
+    implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.8.5'
+
+    compileOnly 'org.projectlombok:lombok'
+    annotationProcessor 'org.projectlombok:lombok'
+}
+
+tasks.named('test') {
+    useJUnitPlatform()
+}
+
+tasks.named('bootRun') {
+    systemProperty 'otel.sdk.disabled', 'true'
+}

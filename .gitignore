@@ -1,6 +1,56 @@
-.gradle
+# Gradle
+.gradle/
 build/
+**/build/
 !gradle/wrapper/gradle-wrapper.jar
-.idea
+
+# IntelliJ IDEA / local IDE state
+.idea/
 *.iml
+*.ipr
+*.iws
 out/
+bin/
+
+# Eclipse / STS
+.project
+.classpath
+.settings/
+.springBeans
+.sts4-cache/
+
+# VS Code local settings
+.vscode/
+
+# Java / JVM artifacts
+*.class
+*.jar
+*.war
+*.ear
+!gradle/wrapper/gradle-wrapper.jar
+hs_err_pid*
+replay_pid*
+
+# Logs
+*.log
+logs/
+
+# Environment / local secrets
+.env
+.env.*
+!.env.example
+application-local.yml
+application-local.yaml
+application-dev-local.yml
+application-dev-local.yaml
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Runtime/local data
+/tmp/
+temp/
+*.pid
+
+.claude/

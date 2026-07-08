@@ -2,7 +2,8 @@ package com.bits.loanproposal.application.queryhandler;
 
 import com.bits.ddd.annotation.RegisterQueryHandler;
 import com.bits.ddd.handler.QueryHandler;
-import com.bits.ddd.shared.exception.domain.DomainValidationException;
+import com.bits.ddd.shared.exception.domain.EntityNotFoundException;
+import com.bits.ddd.shared.exception.enums.ErrorCode;
 import com.bits.loanproposal.application.mapper.LoanProposalReadMapper;
 import com.bits.loanproposal.application.query.GetLoanProposalByIdQuery;
 import com.bits.loanproposal.domain.enums.LoanProposalStatus;
@@ -27,8 +28,8 @@ public class GetLoanProposalByIdQueryHandler
     public LoanProposalResponse handle(GetLoanProposalByIdQuery query) {
         LoanProposalReadDocument doc = readRepository
                 .findByIdAndBranchCodeAndIsActive(query.id(), query.branchKey(), true)
-                .orElseThrow(() -> new DomainValidationException(
-                        "NOT_FOUND", "Loan proposal not found with id: " + query.id()));
+                .orElseThrow(() -> new EntityNotFoundException(
+                        ErrorCode.LOAN_PROPOSAL_NOT_FOUND, "LoanProposal", query.id()));
 
         LoanAccountInfo loanAccountInfo = null;
         if (doc.getLoanProposalStatus() == LoanProposalStatus.DISBURSED && doc.getLoanAccountId() != null) {
@@ -40,7 +41,7 @@ public class GetLoanProposalByIdQueryHandler
         }
 
         // ponytail: first repayment date and enrollment override are projected onto the
-        // read document; enrich from external services here if OQ-Q002/OQ-Q003 resolve otherwise
+        // read document. Enrich from external services here if OQ-Q002/OQ-Q003 resolve otherwise
         return LoanProposalReadMapper.toDetailResponse(
                 doc,
                 doc.getFirstRepaymentDate(),

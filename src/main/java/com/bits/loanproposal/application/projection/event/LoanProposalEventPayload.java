@@ -3,6 +3,7 @@ package com.bits.loanproposal.application.projection.event;
 import com.bits.loanproposal.domain.entity.*;
 import com.bits.loanproposal.domain.enums.*;
 import com.bits.loanproposal.domain.valueobject.*;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -20,6 +21,7 @@ import java.util.List;
 @Getter
 @Setter
 @NoArgsConstructor
+@JsonIgnoreProperties(ignoreUnknown = true)
 public abstract class LoanProposalEventPayload {
 
     private String id;

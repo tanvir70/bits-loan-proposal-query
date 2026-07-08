@@ -2,7 +2,8 @@ package com.bits.loanproposal.application.queryhandler;
 
 import com.bits.ddd.annotation.RegisterQueryHandler;
 import com.bits.ddd.handler.QueryHandler;
-import com.bits.ddd.shared.exception.domain.DomainValidationException;
+import com.bits.ddd.shared.exception.domain.BusinessRuleViolationException;
+import com.bits.ddd.shared.exception.enums.ErrorCode;
 import com.bits.loanproposal.application.mapper.LoanProposalReadMapper;
 import com.bits.loanproposal.application.query.GetMonitoringFeedQuery;
 import com.bits.loanproposal.infrastructure.readmodel.document.LoanProposalReadDocument;
@@ -30,7 +31,8 @@ public class GetMonitoringFeedQueryHandler
     public MonitoringFeedResponse handle(GetMonitoringFeedQuery query) {
         long windowHours = Duration.between(query.fromDateTime(), query.toDateTime()).toHours();
         if (windowHours > MAX_WINDOW_HOURS) {
-            throw new DomainValidationException(
+            throw new BusinessRuleViolationException(
+                    ErrorCode.INVALID_REQUEST,
                     "MONITORING_FEED_WINDOW_EXCEEDED",
                     "Monitoring feed window must not exceed " + MAX_WINDOW_HOURS + " hours.");
         }

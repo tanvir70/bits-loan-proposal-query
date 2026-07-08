@@ -2,7 +2,8 @@ package com.bits.loanproposal.application.queryhandler;
 
 import com.bits.ddd.annotation.RegisterQueryHandler;
 import com.bits.ddd.handler.QueryHandler;
-import com.bits.ddd.shared.exception.domain.DomainValidationException;
+import com.bits.ddd.shared.exception.domain.BusinessRuleViolationException;
+import com.bits.ddd.shared.exception.enums.ErrorCode;
 import com.bits.loanproposal.application.query.GetSchemeDetailsQuery;
 import com.bits.loanproposal.domain.enums.LoanProposalStatus;
 import com.bits.loanproposal.infrastructure.readmodel.repository.LoanProposalReadRepository;
@@ -43,7 +44,8 @@ public class GetSchemeDetailsQueryHandler
     @Override
     public SchemeDetailsResponse handle(GetSchemeDetailsQuery query) {
         if (memberSnapshotRepository.findById(query.memberId()).isEmpty()) {
-            throw new DomainValidationException(
+            throw new BusinessRuleViolationException(
+                    ErrorCode.MEMBER_NOT_FOUND,
                     "MEMBER_NOT_FOUND", "Member not found with id: " + query.memberId());
         }
 

@@ -1,6 +1,8 @@
 spring:
   application:
     name: loan-proposal-query
+  main:
+    allow-bean-definition-overriding: true
   rabbitmq:
     host: localhost
     port: 5672

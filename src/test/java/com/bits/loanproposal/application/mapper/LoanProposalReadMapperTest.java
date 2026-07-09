@@ -3,7 +3,7 @@ package com.bits.loanproposal.application.mapper;
 import com.bits.loanproposal.application.projection.event.LoanProposalUpdatedEvent;
 import com.bits.loanproposal.domain.entity.Nominee;
 import com.bits.loanproposal.domain.enums.ApiDataSource;
-import com.bits.loanproposal.domain.enums.DomainStatus;
+import com.bits.ddd.shared.domain.value.DomainStatus;
 import com.bits.loanproposal.domain.enums.LoanProposalStatus;
 import com.bits.loanproposal.domain.enums.LoanProposalType;
 import com.bits.loanproposal.domain.valueobject.FireInsuranceDetails;

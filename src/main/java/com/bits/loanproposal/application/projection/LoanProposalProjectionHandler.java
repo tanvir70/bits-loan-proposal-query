@@ -5,7 +5,7 @@ import com.bits.loanproposal.application.projection.event.LoanProposalCreatedEve
 import com.bits.loanproposal.application.projection.event.LoanProposalDeletedEvent;
 import com.bits.loanproposal.application.projection.event.LoanProposalEventPayload;
 import com.bits.loanproposal.application.projection.event.LoanProposalUpdatedEvent;
-import com.bits.loanproposal.domain.enums.DomainStatus;
+import com.bits.ddd.shared.domain.value.DomainStatus;
 import com.bits.loanproposal.infrastructure.readmodel.document.LoanProposalReadDocument;
 import com.bits.loanproposal.infrastructure.readmodel.repository.LoanProposalReadRepository;
 import com.bits.loanproposal.infrastructure.readmodel.snapshot.InsuranceProductSnapshotDocument;

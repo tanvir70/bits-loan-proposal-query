@@ -3,6 +3,7 @@ package com.bits.loanproposal.infrastructure.readmodel.document;
 import com.bits.loanproposal.domain.entity.*;
 import com.bits.loanproposal.domain.enums.*;
 import com.bits.loanproposal.domain.valueobject.*;
+import com.bits.ddd.shared.domain.value.DomainStatus;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;

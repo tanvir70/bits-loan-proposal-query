@@ -29,8 +29,8 @@ public class GetMonitoringFeedQueryHandler
 
     @Override
     public MonitoringFeedResponse handle(GetMonitoringFeedQuery query) {
-        long windowHours = Duration.between(query.fromDateTime(), query.toDateTime()).toHours();
-        if (windowHours > MAX_WINDOW_HOURS) {
+        Duration duration = Duration.between(query.fromDateTime(), query.toDateTime());
+        if (duration.compareTo(Duration.ofHours(MAX_WINDOW_HOURS)) > 0) {
             throw new BusinessRuleViolationException(
                     ErrorCode.INVALID_REQUEST,
                     "MONITORING_FEED_WINDOW_EXCEEDED",

@@ -58,6 +58,36 @@ class GetMonitoringFeedQueryHandlerTest {
                     assertThat(br.getBusinessRule()).isEqualTo("MONITORING_FEED_WINDOW_EXCEEDED");
                 });
     }
+
+    @Test
+    void handleSucceedsWhenWindowIsExactly24Hours() {
+        LocalDateTime from = LocalDateTime.of(2026, 1, 1, 9, 0, 0);
+        LocalDateTime to = LocalDateTime.of(2026, 1, 2, 9, 0, 0); // exactly 24 hours
+
+        LoanProposalReadDocument doc = new LoanProposalReadDocument();
+        doc.setId("proposal-1");
+        when(readRepository.findByCreatedAtBetween(from, to)).thenReturn(List.of(doc));
+
+        GetMonitoringFeedQuery query = new GetMonitoringFeedQuery("trace-1", from, to);
+        MonitoringFeedResponse response = handler.handle(query);
+
+        assertThat(response.totalCount()).isEqualTo(1);
+    }
+
+    @Test
+    void handleThrowsExceptionWhenWindowExceeds24HoursByOneSecond() {
+        LocalDateTime from = LocalDateTime.of(2026, 1, 1, 9, 0, 0);
+        LocalDateTime to = LocalDateTime.of(2026, 1, 2, 9, 0, 1); // 24 hours and 1 second
+
+        GetMonitoringFeedQuery query = new GetMonitoringFeedQuery("trace-1", from, to);
+
+        assertThatThrownBy(() -> handler.handle(query))
+                .isInstanceOf(BusinessRuleViolationException.class)
+                .satisfies(ex -> {
+                    BusinessRuleViolationException br = (BusinessRuleViolationException) ex;
+                    assertThat(br.getBusinessRule()).isEqualTo("MONITORING_FEED_WINDOW_EXCEEDED");
+                });
+    }
 }
 
 

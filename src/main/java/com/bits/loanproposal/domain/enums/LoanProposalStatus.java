@@ -19,6 +19,26 @@ public final class LoanProposalStatus extends DomainStatus {
 
     @JsonCreator
     public static LoanProposalStatus of(String code) {
-        return new LoanProposalStatus(code);
+        if (code == null) {
+            return null;
+        }
+        switch (code) {
+            case "DRAFT":
+                return DRAFT;
+            case "BM_APPROVAL_PENDING":
+                return BM_APPROVAL_PENDING;
+            case "BM_REJECT":
+                return BM_REJECT;
+            case "PENDING":
+                return PENDING;
+            case "APPROVED":
+                return APPROVED;
+            case "REJECTED":
+                return REJECTED;
+            case "DISBURSED":
+                return DISBURSED;
+            default:
+                return new LoanProposalStatus(code);
+        }
     }
 }

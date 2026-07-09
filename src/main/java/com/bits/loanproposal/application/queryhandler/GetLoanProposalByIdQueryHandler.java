@@ -32,7 +32,7 @@ public class GetLoanProposalByIdQueryHandler
                         ErrorCode.LOAN_PROPOSAL_NOT_FOUND, "LoanProposal", query.id()));
 
         LoanAccountInfo loanAccountInfo = null;
-        if (doc.getLoanProposalStatus() == LoanProposalStatus.DISBURSED && doc.getLoanAccountId() != null) {
+        if (LoanProposalStatus.DISBURSED.equals(doc.getLoanProposalStatus()) && doc.getLoanAccountId() != null) {
             loanAccountInfo = new LoanAccountInfo(
                     doc.getLoanAccountBalance(),
                     doc.getLoanAccountScheduledAmount(),

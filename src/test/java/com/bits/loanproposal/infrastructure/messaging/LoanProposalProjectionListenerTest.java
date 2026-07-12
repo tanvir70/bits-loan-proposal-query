@@ -1,10 +1,11 @@
 package com.bits.loanproposal.infrastructure.messaging;
 
-import com.bits.loanproposal.application.projection.LoanProposalProjectionHandler;
+import com.bits.ddd.service.EventProcessWrapper;
+import com.bits.loanproposal.application.projection.event.LoanProposalCreatedEvent;
+import com.bits.loanproposal.application.projection.event.LoanProposalDeletedEvent;
 import com.bits.loanproposal.application.projection.event.LoanProposalUpdatedEvent;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.amqp.core.Message;
@@ -12,28 +13,27 @@ import org.springframework.amqp.core.MessageProperties;
 
 import java.nio.charset.StandardCharsets;
 
-import static com.bits.loanproposal.application.projection.LoanProposalProjectionHandlerTest.commandUpdateJson;
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.verify;
 
 @ExtendWith(MockitoExtension.class)
 class LoanProposalProjectionListenerTest {
 
     @Mock
-    private LoanProposalProjectionHandler projectionHandler;
+    private EventProcessWrapper<Message> eventProcessWrapper;
 
     @Test
-    void onLoanProposalUpdatedDeserializesMessageAndDelegatesToProjectionHandler() {
-        LoanProposalProjectionListener listener = new LoanProposalProjectionListener(projectionHandler);
+    void routesEachQueueToTheMatchingEventType() {
+        LoanProposalProjectionListener listener = new LoanProposalProjectionListener(eventProcessWrapper);
+        Message message = message("{}");
 
-        listener.onLoanProposalUpdated(message(commandUpdateJson()));
+        listener.onLoanProposalCreated(message);
+        verify(eventProcessWrapper).processMessage(message, LoanProposalCreatedEvent.class);
 
-        ArgumentCaptor<LoanProposalUpdatedEvent> eventCaptor =
-                ArgumentCaptor.forClass(LoanProposalUpdatedEvent.class);
-        verify(projectionHandler).handle(eventCaptor.capture());
-        assertThat(eventCaptor.getValue().getId()).isEqualTo("proposal-1");
-        assertThat(eventCaptor.getValue().getTraceId()).isEqualTo("trace-1");
-        assertThat(eventCaptor.getValue().getProposalNumber()).isEqualTo("LP-UPDATED");
+        listener.onLoanProposalUpdated(message);
+        verify(eventProcessWrapper).processMessage(message, LoanProposalUpdatedEvent.class);
+
+        listener.onLoanProposalDeleted(message);
+        verify(eventProcessWrapper).processMessage(message, LoanProposalDeletedEvent.class);
     }
 
     private Message message(String json) {

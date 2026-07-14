@@ -6,7 +6,7 @@ plugins {
 
 group = 'com.bits.loanproposal'
 version = '0.0.1-SNAPSHOT'
-description = 'Loan Proposal query-side read projection service using bits-ddd 1.2.1'
+description = 'Loan Proposal query-side read projection service using bits-ddd 1.2.6'
 
 java {
     toolchain {
@@ -16,7 +16,7 @@ java {
 
 dependencyManagement {
     imports {
-        mavenBom 'com.bits.ddd:bits-ddd-bom:1.2.1'
+        mavenBom 'com.bits.ddd:bits-ddd-bom:1.2.6'
     }
 }
 

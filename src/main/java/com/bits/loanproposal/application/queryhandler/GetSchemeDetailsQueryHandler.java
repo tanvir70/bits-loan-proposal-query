@@ -3,7 +3,7 @@ package com.bits.loanproposal.application.queryhandler;
 import com.bits.ddd.annotation.RegisterQueryHandler;
 import com.bits.ddd.handler.QueryHandler;
 import com.bits.ddd.shared.exception.domain.BusinessRuleViolationException;
-import com.bits.ddd.shared.exception.enums.ErrorCode;
+import com.bits.ddd.shared.localization.LocalizedMessage;
 import com.bits.loanproposal.application.query.GetSchemeDetailsQuery;
 import com.bits.loanproposal.domain.enums.LoanProposalStatus;
 import com.bits.loanproposal.infrastructure.readmodel.repository.LoanProposalReadRepository;
@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Map;
 
 @Service
 @RegisterQueryHandler
@@ -45,8 +46,11 @@ public class GetSchemeDetailsQueryHandler
     public SchemeDetailsResponse handle(GetSchemeDetailsQuery query) {
         if (memberSnapshotRepository.findById(query.memberId()).isEmpty()) {
             throw new BusinessRuleViolationException(
-                    ErrorCode.MEMBER_NOT_FOUND,
-                    "MEMBER_NOT_FOUND", "Member not found with id: " + query.memberId());
+                    query.getQueryIdentifier(), query.getQueryType(),
+                    Map.of("memberId", LocalizedMessage.builder()
+                            .key("MEMBER_NOT_FOUND")
+                            .args(new Object[]{query.memberId()})
+                            .build()));
         }
 
         String voCategory = null;

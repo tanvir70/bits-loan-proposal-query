@@ -1,6 +1,6 @@
 package com.bits.loanproposal.application.queryhandler;
 
-import com.bits.ddd.shared.exception.domain.EntityNotFoundException;
+import com.bits.loanproposal.shared.exception.EntityNotFoundException;
 import com.bits.loanproposal.application.query.GetLoanProposalByIdQuery;
 import com.bits.loanproposal.domain.enums.LoanProposalStatus;
 import com.bits.loanproposal.infrastructure.readmodel.document.LoanProposalReadDocument;

@@ -1,8 +1,7 @@
 package com.bits.loanproposal.presentation.controller;
 
-import com.bits.ddd.controller.BaseApiController;
-import com.bits.ddd.dto.ApiResponse;
 import com.bits.ddd.infra.core.bus.QueryBus;
+import com.bits.ddd.shared.dto.ApiResponse;
 import com.bits.ddd.shared.constants.MdcConstants;
 import com.bits.loanproposal.application.query.*;
 import com.bits.loanproposal.domain.enums.LoanProposalStatus;
@@ -28,7 +27,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/loan-proposals")
-public class LoanProposalQueryController extends BaseApiController {
+public class LoanProposalQueryController {
 
     private final QueryBus queryBus;
 

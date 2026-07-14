@@ -4,7 +4,7 @@ import com.bits.loanproposal.domain.entity.*;
 import com.bits.loanproposal.domain.enums.*;
 import com.bits.loanproposal.domain.valueobject.*;
 import com.bits.ddd.shared.domain.value.DomainStatus;
-import com.bits.ddd.shared.messaging.EventMessage;
+import com.bits.ddd.shared.messaging.Event;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -24,7 +24,7 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown = true)
-public abstract class LoanProposalEventPayload extends EventMessage {
+public abstract class LoanProposalEventPayload extends Event {
 
     private String id;
     private Long loanProposalId;

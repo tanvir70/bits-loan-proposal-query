@@ -1,6 +1,6 @@
 package com.bits.loanproposal.application.projection.event;
 
-import com.bits.ddd.shared.messaging.EventMessage;
+import com.bits.ddd.shared.messaging.Event;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
 @Setter
 @NoArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class LoanProposalDeletedEvent extends EventMessage {
+public class LoanProposalDeletedEvent extends Event {
     private String id;
     private LocalDateTime deletedAt;
     private String deletedBy;

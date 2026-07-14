@@ -55,7 +55,8 @@ class GetMonitoringFeedQueryHandlerTest {
                 .isInstanceOf(BusinessRuleViolationException.class)
                 .satisfies(ex -> {
                     BusinessRuleViolationException br = (BusinessRuleViolationException) ex;
-                    assertThat(br.getBusinessRule()).isEqualTo("MONITORING_FEED_WINDOW_EXCEEDED");
+                    assertThat(br.getErrorDetails().get("toDateTime").getKey())
+                            .isEqualTo("MONITORING_FEED_WINDOW_EXCEEDED");
                 });
     }
 
@@ -85,7 +86,8 @@ class GetMonitoringFeedQueryHandlerTest {
                 .isInstanceOf(BusinessRuleViolationException.class)
                 .satisfies(ex -> {
                     BusinessRuleViolationException br = (BusinessRuleViolationException) ex;
-                    assertThat(br.getBusinessRule()).isEqualTo("MONITORING_FEED_WINDOW_EXCEEDED");
+                    assertThat(br.getErrorDetails().get("toDateTime").getKey())
+                            .isEqualTo("MONITORING_FEED_WINDOW_EXCEEDED");
                 });
     }
 }

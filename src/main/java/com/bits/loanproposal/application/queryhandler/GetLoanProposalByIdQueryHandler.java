@@ -2,13 +2,12 @@ package com.bits.loanproposal.application.queryhandler;
 
 import com.bits.ddd.annotation.RegisterQueryHandler;
 import com.bits.ddd.handler.QueryHandler;
-import com.bits.ddd.shared.exception.domain.EntityNotFoundException;
-import com.bits.ddd.shared.exception.enums.ErrorCode;
 import com.bits.loanproposal.application.mapper.LoanProposalReadMapper;
 import com.bits.loanproposal.application.query.GetLoanProposalByIdQuery;
 import com.bits.loanproposal.domain.enums.LoanProposalStatus;
 import com.bits.loanproposal.infrastructure.readmodel.document.LoanProposalReadDocument;
 import com.bits.loanproposal.infrastructure.readmodel.repository.LoanProposalReadRepository;
+import com.bits.loanproposal.shared.exception.EntityNotFoundException;
 import com.bits.loanproposal.presentation.dto.LoanAccountInfo;
 import com.bits.loanproposal.presentation.dto.LoanProposalResponse;
 import org.springframework.stereotype.Service;
@@ -29,7 +28,7 @@ public class GetLoanProposalByIdQueryHandler
         LoanProposalReadDocument doc = readRepository
                 .findByIdAndBranchCodeAndIsActive(query.id(), query.branchKey(), true)
                 .orElseThrow(() -> new EntityNotFoundException(
-                        ErrorCode.LOAN_PROPOSAL_NOT_FOUND, "LoanProposal", query.id()));
+                        query.getQueryIdentifier(), query.getQueryType(), "LoanProposal", query.id()));
 
         LoanAccountInfo loanAccountInfo = null;
         if (LoanProposalStatus.DISBURSED.equals(doc.getLoanProposalStatus()) && doc.getLoanAccountId() != null) {

@@ -12,6 +12,7 @@ import com.bits.loanproposal.infrastructure.readmodel.snapshot.SchemeSnapshotRep
 import com.bits.loanproposal.infrastructure.readmodel.snapshot.VillageOrganisationSnapshotDocument;
 import com.bits.loanproposal.infrastructure.readmodel.snapshot.VillageOrganisationSnapshotRepository;
 import com.bits.loanproposal.presentation.dto.SchemeDetailsResponse;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -20,6 +21,7 @@ import java.util.Map;
 
 @Service
 @RegisterQueryHandler
+@RequiredArgsConstructor
 public class GetSchemeDetailsQueryHandler
         implements QueryHandler<GetSchemeDetailsQuery, SchemeDetailsResponse> {
 
@@ -30,17 +32,6 @@ public class GetSchemeDetailsQueryHandler
     private final MemberSnapshotRepository memberSnapshotRepository;
     private final VillageOrganisationSnapshotRepository villageOrganisationSnapshotRepository;
     private final SchemeSnapshotRepository schemeSnapshotRepository;
-
-    public GetSchemeDetailsQueryHandler(
-            LoanProposalReadRepository readRepository,
-            MemberSnapshotRepository memberSnapshotRepository,
-            VillageOrganisationSnapshotRepository villageOrganisationSnapshotRepository,
-            SchemeSnapshotRepository schemeSnapshotRepository) {
-        this.readRepository = readRepository;
-        this.memberSnapshotRepository = memberSnapshotRepository;
-        this.villageOrganisationSnapshotRepository = villageOrganisationSnapshotRepository;
-        this.schemeSnapshotRepository = schemeSnapshotRepository;
-    }
 
     @Override
     public SchemeDetailsResponse handle(GetSchemeDetailsQuery query) {

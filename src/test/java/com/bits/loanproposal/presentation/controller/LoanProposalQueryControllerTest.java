@@ -8,6 +8,7 @@ import com.bits.loanproposal.presentation.dto.LoanProposalResponse;
 import com.bits.loanproposal.presentation.dto.MonitoringFeedResponse;
 import com.bits.loanproposal.presentation.dto.SchemeDetailsResponse;
 import com.bits.loanproposal.presentation.dto.UPGTUPExistingLoansResponse;
+import com.bits.loanproposal.presentation.constant.RouteConstants;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringBootConfiguration;
@@ -61,7 +62,7 @@ class LoanProposalQueryControllerTest {
                 && "test-trace".equals(((GetLoanProposalByIdQuery) q).traceId()))))
                 .thenReturn(response);
 
-        mockMvc.perform(get("/api/loan-proposals/0010/proposal-1")
+        mockMvc.perform(get(RouteConstants.LOAN_PROPOSALS_BASE + "/0010/proposal-1")
                         .header(MdcConstants.TRACE_ID_HEADER, "test-trace")
                         .requestAttr(MdcConstants.TRACE_ID, "test-trace")
                         .accept(MediaType.APPLICATION_JSON))
@@ -86,7 +87,7 @@ class LoanProposalQueryControllerTest {
                 && "test-trace".equals(((ListLoanProposalsQuery) q).traceId()))))
                 .thenReturn(page);
 
-        mockMvc.perform(get("/api/loan-proposals/0010")
+        mockMvc.perform(get(RouteConstants.LOAN_PROPOSALS_BASE + "/0010")
                         .param("voId", "15")
                         .param("statuses", "PENDING,APPROVED")
                         .header(MdcConstants.TRACE_ID_HEADER, "test-trace")
@@ -110,7 +111,7 @@ class LoanProposalQueryControllerTest {
                 && "test-trace".equals(((SearchLoanProposalsV2Query) q).traceId()))))
                 .thenReturn(page);
 
-        mockMvc.perform(get("/api/loan-proposals/v2/0010")
+        mockMvc.perform(get(RouteConstants.LOAN_PROPOSALS_BASE + "/v2/0010")
                         .param("searchTerm", "john")
                         .header(MdcConstants.TRACE_ID_HEADER, "test-trace")
                         .requestAttr(MdcConstants.TRACE_ID, "test-trace")
@@ -131,7 +132,7 @@ class LoanProposalQueryControllerTest {
                 && "test-trace".equals(((GetSchemeDetailsQuery) q).traceId()))))
                 .thenReturn(response);
 
-        mockMvc.perform(get("/api/loan-proposals/scheme-details")
+        mockMvc.perform(get(RouteConstants.LOAN_PROPOSALS_BASE + RouteConstants.SCHEME_DETAILS)
                         .param("memberId", "30")
                         .param("loanProductId", "40")
                         .param("schemeId", "50")
@@ -154,7 +155,7 @@ class LoanProposalQueryControllerTest {
                 && "test-trace".equals(((GetUPGTUPExistingLoansQuery) q).traceId()))))
                 .thenReturn(response);
 
-        mockMvc.perform(get("/api/loan-proposals/upg-tup/0010")
+        mockMvc.perform(get(RouteConstants.LOAN_PROPOSALS_BASE + "/upg-tup/0010")
                         .param("loanProductId", "40")
                         .header(MdcConstants.TRACE_ID_HEADER, "test-trace")
                         .requestAttr(MdcConstants.TRACE_ID, "test-trace")
@@ -175,7 +176,7 @@ class LoanProposalQueryControllerTest {
                 && "test-trace".equals(((GetMonitoringFeedQuery) q).traceId()))))
                 .thenReturn(response);
 
-        mockMvc.perform(get("/api/loan-proposals/monitor")
+        mockMvc.perform(get(RouteConstants.LOAN_PROPOSALS_BASE + RouteConstants.MONITORING_FEED)
                         .param("fromDateTime", "2026-01-15T09:00:00")
                         .param("toDateTime", "2026-01-15T15:00:00")
                         .header(MdcConstants.TRACE_ID_HEADER, "test-trace")

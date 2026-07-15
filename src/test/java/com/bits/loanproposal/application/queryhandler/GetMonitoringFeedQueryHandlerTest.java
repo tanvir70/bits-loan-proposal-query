@@ -1,6 +1,7 @@
 package com.bits.loanproposal.application.queryhandler;
 
 import com.bits.ddd.shared.exception.domain.BusinessRuleViolationException;
+import com.bits.loanproposal.application.mapper.LoanProposalReadMapper;
 import com.bits.loanproposal.application.query.GetMonitoringFeedQuery;
 import com.bits.loanproposal.infrastructure.readmodel.document.LoanProposalReadDocument;
 import com.bits.loanproposal.infrastructure.readmodel.repository.LoanProposalReadRepository;
@@ -9,7 +10,9 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.mapstruct.factory.Mappers;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -23,6 +26,9 @@ class GetMonitoringFeedQueryHandlerTest {
 
     @Mock
     private LoanProposalReadRepository readRepository;
+
+    @Spy
+    private LoanProposalReadMapper loanProposalReadMapper = Mappers.getMapper(LoanProposalReadMapper.class);
 
     @InjectMocks
     private GetMonitoringFeedQueryHandler handler;
@@ -91,5 +97,4 @@ class GetMonitoringFeedQueryHandlerTest {
                 });
     }
 }
-
 

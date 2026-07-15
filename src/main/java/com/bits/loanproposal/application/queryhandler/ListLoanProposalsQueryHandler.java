@@ -6,6 +6,7 @@ import com.bits.loanproposal.application.mapper.LoanProposalReadMapper;
 import com.bits.loanproposal.application.query.ListLoanProposalsQuery;
 import com.bits.loanproposal.infrastructure.readmodel.repository.LoanProposalReadRepository;
 import com.bits.loanproposal.presentation.dto.LoanProposalListItem;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -14,14 +15,12 @@ import org.springframework.stereotype.Service;
 
 @Service
 @RegisterQueryHandler
+@RequiredArgsConstructor
 public class ListLoanProposalsQueryHandler
         implements QueryHandler<ListLoanProposalsQuery, Page<LoanProposalListItem>> {
 
     private final LoanProposalReadRepository readRepository;
-
-    public ListLoanProposalsQueryHandler(LoanProposalReadRepository readRepository) {
-        this.readRepository = readRepository;
-    }
+    private final LoanProposalReadMapper loanProposalReadMapper;
 
     @Override
     public Page<LoanProposalListItem> handle(ListLoanProposalsQuery query) {
@@ -36,6 +35,6 @@ public class ListLoanProposalsQueryHandler
                 .build();
 
         PageRequest pageable = PageRequest.of(query.page(), query.size(), Sort.by("createdAt").descending());
-        return readRepository.findAll(criteria, pageable).map(LoanProposalReadMapper::toListItem);
+        return readRepository.findAll(criteria, pageable).map(loanProposalReadMapper::toListItem);
     }
 }

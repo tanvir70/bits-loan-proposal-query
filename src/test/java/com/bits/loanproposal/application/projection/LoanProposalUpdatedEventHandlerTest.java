@@ -1,6 +1,7 @@
 package com.bits.loanproposal.application.projection;
 
 import com.bits.ddd.shared.util.JsonUtil;
+import com.bits.loanproposal.application.mapper.LoanProposalReadMapper;
 import com.bits.loanproposal.application.projection.event.LoanProposalUpdatedEvent;
 import com.bits.loanproposal.domain.enums.ApiDataSource;
 import com.bits.ddd.shared.domain.value.DomainStatus;
@@ -15,7 +16,9 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.mapstruct.factory.Mappers;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -34,6 +37,9 @@ public class LoanProposalUpdatedEventHandlerTest {
 
     @Mock
     private InsuranceProductSnapshotRepository insuranceProductSnapshotRepository;
+
+    @Spy
+    private LoanProposalReadMapper loanProposalReadMapper = Mappers.getMapper(LoanProposalReadMapper.class);
 
     @InjectMocks
     private LoanProposalUpdatedEventHandler updatedEventHandler;

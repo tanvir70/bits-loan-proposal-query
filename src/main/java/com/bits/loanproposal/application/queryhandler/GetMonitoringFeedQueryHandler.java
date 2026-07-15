@@ -9,6 +9,7 @@ import com.bits.loanproposal.application.query.GetMonitoringFeedQuery;
 import com.bits.loanproposal.infrastructure.readmodel.document.LoanProposalReadDocument;
 import com.bits.loanproposal.infrastructure.readmodel.repository.LoanProposalReadRepository;
 import com.bits.loanproposal.presentation.dto.MonitoringFeedResponse;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.Duration;
@@ -17,16 +18,14 @@ import java.util.Map;
 
 @Service
 @RegisterQueryHandler
+@RequiredArgsConstructor
 public class GetMonitoringFeedQueryHandler
         implements QueryHandler<GetMonitoringFeedQuery, MonitoringFeedResponse> {
 
     private static final long MAX_WINDOW_HOURS = 24;
 
     private final LoanProposalReadRepository readRepository;
-
-    public GetMonitoringFeedQueryHandler(LoanProposalReadRepository readRepository) {
-        this.readRepository = readRepository;
-    }
+    private final LoanProposalReadMapper loanProposalReadMapper;
 
     @Override
     public MonitoringFeedResponse handle(GetMonitoringFeedQuery query) {
@@ -47,6 +46,6 @@ public class GetMonitoringFeedQueryHandler
                 query.fromDateTime(),
                 query.toDateTime(),
                 proposals.size(),
-                proposals.stream().map(LoanProposalReadMapper::toMonitoringItem).toList());
+                proposals.stream().map(loanProposalReadMapper::toMonitoringItem).toList());
     }
 }

@@ -9,6 +9,7 @@ import com.bits.loanproposal.domain.enums.LoanProposalType;
 import com.bits.loanproposal.domain.valueobject.FireInsuranceDetails;
 import com.bits.loanproposal.infrastructure.readmodel.document.LoanProposalReadDocument;
 import org.junit.jupiter.api.Test;
+import org.mapstruct.factory.Mappers;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -18,6 +19,8 @@ import java.util.List;
 import static org.assertj.core.api.Assertions.assertThat;
 
 class LoanProposalReadMapperTest {
+
+    private final LoanProposalReadMapper mapper = Mappers.getMapper(LoanProposalReadMapper.class);
 
     @Test
     void mergeUpdatedFieldsUpdatesCommandEventFieldsAndPreservesReadModelOnlyFields() {
@@ -88,7 +91,7 @@ class LoanProposalReadMapperTest {
         event.setFireInsuranceDetails(fireInsuranceDetails);
         event.setApplicationDate(LocalDate.of(2026, 2, 1));
 
-        LoanProposalReadDocument merged = LoanProposalReadMapper.mergeUpdatedFields(existing, event);
+        LoanProposalReadDocument merged = mapper.mergeUpdatedFields(existing, event);
 
         assertThat(merged.getProposalNumber()).isEqualTo("LP-2026-001");
         assertThat(merged.getProposalReferenceNumber()).isEqualTo("REF-001");

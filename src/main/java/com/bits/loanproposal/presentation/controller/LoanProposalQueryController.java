@@ -1,22 +1,20 @@
 package com.bits.loanproposal.presentation.controller;
 
 import com.bits.ddd.infra.core.bus.QueryBus;
-import com.bits.ddd.shared.dto.ApiResponse;
 import com.bits.ddd.shared.constants.MdcConstants;
-import com.bits.loanproposal.application.query.*;
+import com.bits.ddd.shared.dto.ApiResponse;
+import com.bits.loanproposal.application.query.GetLoanProposalByIdQuery;
+import com.bits.loanproposal.application.query.GetUPGTUPExistingLoansQuery;
 import com.bits.loanproposal.domain.enums.LoanProposalStatus;
 import com.bits.loanproposal.domain.enums.LoanProposalType;
-import com.bits.loanproposal.presentation.dto.LoanProposalListItem;
-import com.bits.loanproposal.presentation.dto.LoanProposalResponse;
-import com.bits.loanproposal.presentation.dto.MonitoringFeedResponse;
-import com.bits.loanproposal.presentation.dto.SchemeDetailsResponse;
-import com.bits.loanproposal.presentation.dto.UPGTUPExistingLoansResponse;
+import com.bits.loanproposal.presentation.dto.*;
 import com.bits.loanproposal.presentation.dto.request.GetMonitoringFeedRequest;
 import com.bits.loanproposal.presentation.dto.request.GetSchemeDetailsRequest;
 import com.bits.loanproposal.presentation.dto.request.ListLoanProposalsRequest;
 import com.bits.loanproposal.presentation.dto.request.SearchLoanProposalsV2Request;
-import org.springframework.format.annotation.DateTimeFormat;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -25,28 +23,29 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import static com.bits.loanproposal.presentation.constant.RouteConstants.*;
+
 @RestController
-@RequestMapping("/api/loan-proposals")
+@RequiredArgsConstructor
+@RequestMapping(LOAN_PROPOSALS_BASE)
 public class LoanProposalQueryController {
 
     private final QueryBus queryBus;
 
-    public LoanProposalQueryController(QueryBus queryBus) {
-        this.queryBus = queryBus;
-    }
-
-    @GetMapping("/{branchKey}/{id}")
+    @GetMapping(GET_BY_ID)
     public ResponseEntity<ApiResponse<LoanProposalResponse>> getById(
             @RequestAttribute(name = MdcConstants.TRACE_ID, required = false) String traceId,
-            @PathVariable String branchKey,
-            @PathVariable String id) {
+            @PathVariable String branchKey, @PathVariable String id) {
+
         String resolvedTraceId = traceId(traceId);
-        LoanProposalResponse response = queryBus.handle(
+
+        LoanProposalResponse loanProposalResponse = queryBus.handle(
                 new GetLoanProposalByIdQuery(resolvedTraceId, branchKey, id));
-        return ok(response, resolvedTraceId);
+
+        return ok(loanProposalResponse, resolvedTraceId);
     }
 
-    @GetMapping("/{branchKey}")
+    @GetMapping(LIST)
     public ResponseEntity<ApiResponse<Page<LoanProposalListItem>>> list(
             @RequestAttribute(name = MdcConstants.TRACE_ID, required = false) String traceId,
             @PathVariable String branchKey,
@@ -62,13 +61,17 @@ public class LoanProposalQueryController {
             @RequestParam(defaultValue = "0") Integer page,
             @RequestParam(defaultValue = "20") Integer size) {
         String resolvedTraceId = traceId(traceId);
-        ListLoanProposalsRequest request = new ListLoanProposalsRequest(
+
+        ListLoanProposalsRequest listLoanProposalsRequest = new ListLoanProposalsRequest(
                 voId, memberId, loanProductId, schemeId, projectId, fromDate, toDate, statuses, proposalType, page, size);
-        Page<LoanProposalListItem> response = queryBus.handle(request.toQuery(resolvedTraceId, branchKey));
-        return ok(response, resolvedTraceId);
+
+        Page<LoanProposalListItem> loanProposalListItems = queryBus.handle(
+                listLoanProposalsRequest.toQuery(resolvedTraceId, branchKey));
+
+        return ok(loanProposalListItems, resolvedTraceId);
     }
 
-    @GetMapping("/v2/{branchKey}")
+    @GetMapping(SEARCH_V2)
     public ResponseEntity<ApiResponse<Page<LoanProposalListItem>>> searchV2(
             @RequestAttribute(name = MdcConstants.TRACE_ID, required = false) String traceId,
             @PathVariable String branchKey,
@@ -83,13 +86,17 @@ public class LoanProposalQueryController {
             @RequestParam(defaultValue = "0") Integer page,
             @RequestParam(defaultValue = "20") Integer size) {
         String resolvedTraceId = traceId(traceId);
-        SearchLoanProposalsV2Request request = new SearchLoanProposalsV2Request(
+
+        SearchLoanProposalsV2Request searchLoanProposalsV2Request = new SearchLoanProposalsV2Request(
                 searchTerm, voId, memberId, loanProductId, statuses, proposalType, fromDate, toDate, page, size);
-        Page<LoanProposalListItem> response = queryBus.handle(request.toQuery(resolvedTraceId, branchKey));
-        return ok(response, resolvedTraceId);
+
+        Page<LoanProposalListItem> loanProposalListItems = queryBus.handle(
+                searchLoanProposalsV2Request.toQuery(resolvedTraceId, branchKey));
+
+        return ok(loanProposalListItems, resolvedTraceId);
     }
 
-    @GetMapping("/scheme-details")
+    @GetMapping(SCHEME_DETAILS)
     public ResponseEntity<ApiResponse<SchemeDetailsResponse>> schemeDetails(
             @RequestAttribute(name = MdcConstants.TRACE_ID, required = false) String traceId,
             @RequestParam Long memberId,
@@ -98,31 +105,40 @@ public class LoanProposalQueryController {
             @RequestParam Long branchId,
             @RequestParam(required = false) Long voId) {
         String resolvedTraceId = traceId(traceId);
-        GetSchemeDetailsRequest request = new GetSchemeDetailsRequest(memberId, loanProductId, schemeId, branchId, voId);
-        SchemeDetailsResponse response = queryBus.handle(request.toQuery(resolvedTraceId));
-        return ok(response, resolvedTraceId);
+
+        GetSchemeDetailsRequest getSchemeDetailsRequest =
+                new GetSchemeDetailsRequest(memberId, loanProductId, schemeId, branchId, voId);
+
+        SchemeDetailsResponse schemeDetailsResponse = queryBus.handle(getSchemeDetailsRequest.toQuery(resolvedTraceId));
+
+        return ok(schemeDetailsResponse, resolvedTraceId);
     }
 
-    @GetMapping("/upg-tup/{branchKey}")
+    @GetMapping(UPG_TUP_EXISTING_LOANS)
     public ResponseEntity<ApiResponse<UPGTUPExistingLoansResponse>> upgTupExistingLoans(
             @RequestAttribute(name = MdcConstants.TRACE_ID, required = false) String traceId,
             @PathVariable String branchKey,
             @RequestParam Long loanProductId) {
         String resolvedTraceId = traceId(traceId);
-        UPGTUPExistingLoansResponse response = queryBus.handle(
+
+        UPGTUPExistingLoansResponse upgTupExistingLoansResponse = queryBus.handle(
                 new GetUPGTUPExistingLoansQuery(resolvedTraceId, branchKey, loanProductId));
-        return ok(response, resolvedTraceId);
+
+        return ok(upgTupExistingLoansResponse, resolvedTraceId);
     }
 
-    @GetMapping("/monitor")
+    @GetMapping(MONITORING_FEED)
     public ResponseEntity<ApiResponse<MonitoringFeedResponse>> monitoringFeed(
             @RequestAttribute(name = MdcConstants.TRACE_ID, required = false) String traceId,
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime fromDateTime,
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime toDateTime) {
         String resolvedTraceId = traceId(traceId);
-        GetMonitoringFeedRequest request = new GetMonitoringFeedRequest(fromDateTime, toDateTime);
-        MonitoringFeedResponse response = queryBus.handle(request.toQuery(resolvedTraceId));
-        return ok(response, resolvedTraceId);
+
+        GetMonitoringFeedRequest getMonitoringFeedRequest = new GetMonitoringFeedRequest(fromDateTime, toDateTime);
+
+        MonitoringFeedResponse monitoringFeedResponse = queryBus.handle(getMonitoringFeedRequest.toQuery(resolvedTraceId));
+
+        return ok(monitoringFeedResponse, resolvedTraceId);
     }
 
     private String traceId(String traceId) {

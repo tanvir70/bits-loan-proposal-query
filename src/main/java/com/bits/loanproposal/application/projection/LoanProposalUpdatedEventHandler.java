@@ -7,30 +7,26 @@ import com.bits.loanproposal.application.projection.event.LoanProposalUpdatedEve
 import com.bits.loanproposal.infrastructure.readmodel.document.LoanProposalReadDocument;
 import com.bits.loanproposal.infrastructure.readmodel.repository.LoanProposalReadRepository;
 import com.bits.loanproposal.infrastructure.readmodel.snapshot.InsuranceProductSnapshotRepository;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 @Slf4j
 @Component
 @RegisterEventHandler
+@RequiredArgsConstructor
 public class LoanProposalUpdatedEventHandler implements EventHandler<LoanProposalUpdatedEvent> {
 
     private final LoanProposalReadRepository readRepository;
     private final InsuranceProductSnapshotRepository insuranceProductSnapshotRepository;
-
-    public LoanProposalUpdatedEventHandler(
-            LoanProposalReadRepository readRepository,
-            InsuranceProductSnapshotRepository insuranceProductSnapshotRepository) {
-        this.readRepository = readRepository;
-        this.insuranceProductSnapshotRepository = insuranceProductSnapshotRepository;
-    }
+    private final LoanProposalReadMapper loanProposalReadMapper;
 
     @Override
     public void handle(LoanProposalUpdatedEvent event) {
         LoanProposalReadDocument existing = readRepository.findById(event.getId())
                 .orElseGet(LoanProposalReadDocument::new);
         String existingProductName = existing.getFireInsuranceProductName();
-        LoanProposalReadDocument updated = LoanProposalReadMapper.mergeUpdatedFields(existing, event);
+        LoanProposalReadDocument updated = loanProposalReadMapper.mergeUpdatedFields(existing, event);
         updated.setCreditShieldExpiryDate(LoanProposalEventEnrichment.creditShieldExpiry(updated));
         updated.setFireInsuranceExpiryDate(LoanProposalEventEnrichment.fireInsuranceExpiry(updated));
         updated.setFireInsuranceProductName(LoanProposalEventEnrichment.fireInsuranceProductName(

@@ -6,6 +6,7 @@ import com.bits.loanproposal.application.query.GetUPGTUPExistingLoansQuery;
 import com.bits.loanproposal.domain.enums.LoanProposalStatus;
 import com.bits.loanproposal.infrastructure.readmodel.repository.LoanProposalReadRepository;
 import com.bits.loanproposal.presentation.dto.UPGTUPExistingLoansResponse;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -13,6 +14,7 @@ import java.util.List;
 
 @Service
 @RegisterQueryHandler
+@RequiredArgsConstructor
 public class GetUPGTUPExistingLoansQueryHandler
         implements QueryHandler<GetUPGTUPExistingLoansQuery, UPGTUPExistingLoansResponse> {
 
@@ -20,10 +22,6 @@ public class GetUPGTUPExistingLoansQueryHandler
             List.of(LoanProposalStatus.PENDING, LoanProposalStatus.APPROVED, LoanProposalStatus.DISBURSED);
 
     private final LoanProposalReadRepository readRepository;
-
-    public GetUPGTUPExistingLoansQueryHandler(LoanProposalReadRepository readRepository) {
-        this.readRepository = readRepository;
-    }
 
     @Override
     public UPGTUPExistingLoansResponse handle(GetUPGTUPExistingLoansQuery query) {

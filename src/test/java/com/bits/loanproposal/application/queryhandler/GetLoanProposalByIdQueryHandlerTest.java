@@ -1,6 +1,7 @@
 package com.bits.loanproposal.application.queryhandler;
 
 import com.bits.loanproposal.shared.exception.EntityNotFoundException;
+import com.bits.loanproposal.application.mapper.LoanProposalReadMapper;
 import com.bits.loanproposal.application.query.GetLoanProposalByIdQuery;
 import com.bits.loanproposal.domain.enums.LoanProposalStatus;
 import com.bits.loanproposal.infrastructure.readmodel.document.LoanProposalReadDocument;
@@ -10,7 +11,9 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.mapstruct.factory.Mappers;
 
 import java.math.BigDecimal;
 import java.util.Optional;
@@ -24,6 +27,9 @@ class GetLoanProposalByIdQueryHandlerTest {
 
     @Mock
     private LoanProposalReadRepository readRepository;
+
+    @Spy
+    private LoanProposalReadMapper loanProposalReadMapper = Mappers.getMapper(LoanProposalReadMapper.class);
 
     @InjectMocks
     private GetLoanProposalByIdQueryHandler handler;

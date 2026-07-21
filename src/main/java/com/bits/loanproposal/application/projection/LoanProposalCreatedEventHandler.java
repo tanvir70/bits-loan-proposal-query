@@ -11,9 +11,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
-/**
- * Maintains the loan_proposal_read collection from command-side domain events (DDD-REQ-Q002).
- */
 @Slf4j
 @Component
 @RegisterEventHandler
@@ -25,15 +22,17 @@ public class LoanProposalCreatedEventHandler implements EventHandler<LoanProposa
     private final LoanProposalReadMapper loanProposalReadMapper;
 
     @Override
-    public void handle(LoanProposalCreatedEvent event) {
-        LoanProposalReadDocument doc = loanProposalReadMapper.toReadDocument(
-                event,
-                LoanProposalEventEnrichment.creditShieldExpiry(event),
-                LoanProposalEventEnrichment.fireInsuranceExpiry(event),
+    public void handle(LoanProposalCreatedEvent loanProposalCreatedEvent) {
+        LoanProposalReadDocument loanProposalReadDocument = loanProposalReadMapper.toReadDocument(
+                loanProposalCreatedEvent,
+                LoanProposalEventEnrichment.creditShieldExpiry(loanProposalCreatedEvent),
+                LoanProposalEventEnrichment.fireInsuranceExpiry(loanProposalCreatedEvent),
                 LoanProposalEventEnrichment.fireInsuranceProductName(
-                        event.getFireInsuranceProductId(), null, insuranceProductSnapshotRepository));
-        doc.setIsActive(true);
-        readRepository.save(doc);
-        log.info("Projected LoanProposalCreatedEvent traceId={} id={}", event.getTracerId(), event.getId());
+                        loanProposalCreatedEvent.getFireInsuranceProductId(), null, insuranceProductSnapshotRepository));
+
+        loanProposalReadDocument.setIsActive(true);
+
+        readRepository.save(loanProposalReadDocument);
+        log.info("Projected LoanProposalCreatedEvent traceId={} id={}", loanProposalCreatedEvent.getTracerId(), loanProposalCreatedEvent.getId());
     }
 }
